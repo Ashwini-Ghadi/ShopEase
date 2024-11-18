@@ -7,27 +7,53 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.domain.User_Role;
 import com.shopping.entity.User;
+import com.shopping.entity.VerificationCode;
 import com.shopping.repository.UserRepository;
+import com.shopping.request.LoginRequest;
+import com.shopping.response.ApiResponse;
+import com.shopping.response.AuthResponse;
 import com.shopping.response.SignupRequest;
+import com.shopping.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/auth")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class AuthController {
-	@Autowired
+	
 	private UserRepository userRepository;
+	private final AuthService authService;
+
 
 	@PostMapping("/signup")
-	public ResponseEntity<User> createUserHandler(@RequestBody SignupRequest req){
-		User user = new User();
-		user.setEmail(req.getEmail());
-		user.setFullName(req.getFullName());
+	public ResponseEntity<AuthResponse> createUserHandler(@RequestBody SignupRequest req) throws Exception{
+		String jwt = authService.createUser(req);
+		AuthResponse res = new AuthResponse();
+		res.setJwt(jwt);
+		res.setMessage("Register Success");
+		res.setRole(User_Role.Role_Customer);
 		
-		User savedUser =userRepository.save(user);
+		return ResponseEntity.ok(res);
+	}
+	
+	@PostMapping("/sent/login-signup-otp")
+	public ResponseEntity<ApiResponse> sentOtpHandler(@RequestBody VerificationCode req) throws Exception{
 		
-		return ResponseEntity.ok(savedUser);
+		authService.sentLoginOtp(req.getEmail());
+		ApiResponse res = new ApiResponse();
+		res.setMessage("otp sent successfully");
+	
+		return ResponseEntity.ok(res);
+	}
+	
+	@PostMapping("/signing")
+	public ResponseEntity<AuthResponse> loginHandler(@RequestBody LoginRequest req) throws Exception{
+		
+		AuthResponse authResponse = authService.signing(req);
+		
+		return ResponseEntity.ok(authResponse);
 	}
 }

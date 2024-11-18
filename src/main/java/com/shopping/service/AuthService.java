@@ -1,5 +1,14 @@
 package com.shopping.service;
 
-public class AuthService {
+import com.shopping.request.LoginRequest;
+import com.shopping.response.AuthResponse;
+import com.shopping.response.SignupRequest;
+
+public interface AuthService {
+	String createUser(SignupRequest req) throws Exception; 
+
+	void sentLoginOtp(String email) throws Exception;
+
+	AuthResponse signing(LoginRequest req);
 
 }
