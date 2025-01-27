@@ -9,6 +9,6 @@ public interface AuthService {
 
 	void sentLoginOtp(String email) throws Exception;
 
-	AuthResponse signing(LoginRequest req);
+	AuthResponse signin(LoginRequest req);
 
 }

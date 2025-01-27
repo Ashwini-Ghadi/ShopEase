@@ -111,7 +111,7 @@ public class AuthServiceImpl implements AuthService{
 	}
 
 	@Override
-	public AuthResponse signing(LoginRequest req) {
+	public AuthResponse signin(LoginRequest req) {
 		String username = req.getEmail();
 		String otp = req.getOtp();
 		
@@ -138,10 +138,13 @@ public class AuthServiceImpl implements AuthService{
 		}
 
 		VerificationCode verificationCode = verificationCodeRepository.findByEmail(username);
-		if(verificationCode == null || verificationCode.getOtp().equals(otp)) {
-			throw new BadCredentialsException("Wrong otp");
-
+		if (verificationCode == null) {
+		    throw new BadCredentialsException("No OTP found for email: " + username);
 		}
+		if (!verificationCode.getOtp().equals(otp)) {
+		    throw new BadCredentialsException("Wrong OTP provided for email: " + username);
+		}
+
 		
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	}
