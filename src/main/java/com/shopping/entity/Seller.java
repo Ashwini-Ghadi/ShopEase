@@ -3,6 +3,8 @@ package com.shopping.entity;
 import com.shopping.domain.AccountStatus;
 import com.shopping.domain.User_Role;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

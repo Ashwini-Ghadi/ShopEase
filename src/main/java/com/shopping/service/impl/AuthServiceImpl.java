@@ -18,9 +18,11 @@ import org.springframework.stereotype.Service;
 import com.shopping.config.JwtProvider;
 import com.shopping.domain.User_Role;
 import com.shopping.entity.Cart;
+import com.shopping.entity.Seller;
 import com.shopping.entity.User;
 import com.shopping.entity.VerificationCode;
 import com.shopping.repository.CartRepository;
+import com.shopping.repository.SellerRepository;
 import com.shopping.repository.UserRepository;
 import com.shopping.repository.VerificationCodeRepository;
 import com.shopping.request.LoginRequest;
@@ -43,6 +45,7 @@ public class AuthServiceImpl implements AuthService{
 	private final VerificationCodeRepository verificationCodeRepository;
 	private final EmailService emailService;
 	private final CustomUserServiceImpl customUserService;
+	private final SellerRepository sellerRepository;
 	
 	
 	@Override
@@ -82,14 +85,28 @@ public class AuthServiceImpl implements AuthService{
 	}
 
 	@Override
-	public void sentLoginOtp(String email) throws Exception {
-		String SIGNING_PREFIX = "signin_";
+	public void sentLoginOtp(String email, User_Role role) throws Exception {
+		String SIGNING_PREFIX = "signing_"; //When you send "signing_a@gmail.com", your code removes "signing_"It then looks for "a@gmail.com" in userRepository.findByEmail(email).,
+									    	// When you send "signin_a@gmail.com", your code does not match "signing_", so the prefix is not removed.
+											//It searches for "signin_a@gmail.com" as is.
+		//String SELLER_PREFIX = "seller_";
+		
 		if(email.startsWith(SIGNING_PREFIX)) {
 			email= email.substring(SIGNING_PREFIX.length());
-			User user = userRepository.findByEmail(email);
-			if(user == null) {
-				throw new Exception("User not exist with provided email");
+			
+			if(role.equals(User_Role.Role_Seller)) {
+				Seller seller = sellerRepository.findByEmail(email);
+				if(seller == null) {
+					throw new Exception("Seller not found .....");
+				
+				}
+			}else {
+				User user = userRepository.findByEmail(email);
+				if(user == null) {
+					throw new Exception("User not exist with provided email.....");
+				}
 			}
+			
 		}
 		
 		VerificationCode isExist = verificationCodeRepository.findByEmail(email);

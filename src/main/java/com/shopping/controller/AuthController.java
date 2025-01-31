@@ -11,6 +11,7 @@ import com.shopping.domain.User_Role;
 import com.shopping.entity.User;
 import com.shopping.entity.VerificationCode;
 import com.shopping.repository.UserRepository;
+import com.shopping.request.LoginOtpRequest;
 import com.shopping.request.LoginRequest;
 import com.shopping.response.ApiResponse;
 import com.shopping.response.AuthResponse;
@@ -40,9 +41,9 @@ public class AuthController {
 	}
 	
 	@PostMapping("/sent/login-signup-otp")
-	public ResponseEntity<ApiResponse> sentOtpHandler(@RequestBody VerificationCode req) throws Exception{
+	public ResponseEntity<ApiResponse> sentOtpHandler(@RequestBody LoginOtpRequest req) throws Exception{
 		
-		authService.sentLoginOtp(req.getEmail());
+		authService.sentLoginOtp(req.getEmail(), req.getRole());
 		ApiResponse res = new ApiResponse();
 		res.setMessage("otp sent successfully");
 	
