@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BankDetails {
 
-	private String bankAccountHolderName;
-	private String BankIfscCode;
-	private String bankAccountNumber;
+	private String AccountHolderName;
+	private String IfscCode;
+	private String AccountNumber;
 }

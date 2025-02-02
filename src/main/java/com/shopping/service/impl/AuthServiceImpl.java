@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService{
 		
 		VerificationCode verificationCode = verificationCodeRepository.findByEmail(req.getEmail());;
 		if(verificationCode == null || !verificationCode.getOtp().equals(req.getOtp()) ) {
-			throw new Exception("Wrong otp.....");
+			throw new BadCredentialsException("Wrong otp.....");
 		}
 		
 		
@@ -152,6 +152,11 @@ public class AuthServiceImpl implements AuthService{
 		UserDetails userDetails= customUserService.loadUserByUsername(username);
 		if(userDetails == null) {
 			throw new BadCredentialsException("Invalid username");
+		}
+		
+		String SELLER_PREFIX = "seller_";
+		if(username.startsWith(SELLER_PREFIX)) {
+			username = username.substring(SELLER_PREFIX.length());
 		}
 
 		VerificationCode verificationCode = verificationCodeRepository.findByEmail(username);
