@@ -30,7 +30,7 @@ public class CartItems {
 	private Cart cart;
 	
 	@ManyToOne
-	private Product Product;
+	private Product product;
 	
 	private String size;
 	
