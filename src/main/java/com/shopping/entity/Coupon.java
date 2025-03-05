@@ -21,7 +21,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class Coupen {
+public class Coupon {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
